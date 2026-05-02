@@ -1,6 +1,5 @@
 use keyring::Entry;
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Post {
@@ -58,7 +57,7 @@ async fn secure_get_key(service: String, account: String) -> Result<String, Stri
 #[tauri::command]
 async fn secure_delete_key(service: String, account: String) -> Result<(), String> {
     let entry = Entry::new(&service, &account).map_err(|e| e.to_string())?;
-    entry.delete_credential().map_err(|e| e.to_string())?;
+    entry.delete_password().map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -108,6 +107,7 @@ pub fn run() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_sql::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             save_post,

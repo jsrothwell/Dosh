@@ -2,9 +2,10 @@ import { useEffect, useState, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import PostEditor from "./components/PostEditor";
+import { Settings } from "./components/Settings";
 import { getPosts, getAssets, saveAsset, deletePost, deleteAsset, type Post, type Asset } from "./lib/db";
 
-type Section = "drafts" | "queue" | "assets";
+type Section = "drafts" | "queue" | "assets" | "settings";
 
 // ─── Theme hook ───────────────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ const NAV: { id: Section; label: string; icon: string }[] = [
   { id: "drafts", label: "Drafts", icon: "✏️" },
   { id: "queue",  label: "Queue",  icon: "📅" },
   { id: "assets", label: "Assets", icon: "🖼️" },
+  { id: "settings", label: "Settings", icon: "⚙️" },
 ];
 
 // ─── App ──────────────────────────────────────────────────────────────────────
@@ -143,7 +145,7 @@ export default function App() {
         <header className="flex items-center justify-between px-6 py-4
                            border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
           <h1 className="text-base font-semibold capitalize">{section}</h1>
-          {section !== "assets" && (
+          {section !== "assets" && section !== "settings" && (
             <button
               onClick={() => setEditing("new")}
               className="flex items-center gap-2 rounded-lg bg-indigo-600 text-white text-sm
@@ -164,8 +166,9 @@ export default function App() {
         </header>
 
         <div className="flex-1 overflow-auto">
-          {/* ── Editor panel ──────────────────────────────────────────────── */}
-          {editing !== null && section !== "assets" ? (
+          {section === "settings" ? (
+            <Settings />
+          ) : editing !== null && section !== "assets" ? (
             <div className="h-full p-6">
               <PostEditor
                 initial={editing === "new" ? undefined : editing}

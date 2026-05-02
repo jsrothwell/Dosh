@@ -15,12 +15,16 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
 
 # SQLite via Tauri plugin
 tauri-plugin-sql = { version = "2", features = ["sqlite"] }
 
 # Keychain / credential storage
 keyring = "2"
+
+# base64 encoding
+base64 = "0.22"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
